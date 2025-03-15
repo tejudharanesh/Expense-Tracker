@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import { api } from '../services/api';
+import React, { useState, useEffect } from "react";
+import { format } from "date-fns";
+import { api } from "../services/api";
 
-function DailyExpense() {
+function DailyExpense({ user }) {
   const [expenses, setExpenses] = useState([]);
   const [report, setReport] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function DailyExpense() {
 
   const generateReport = async () => {
     try {
-      const data = await api.expenses.getReport('daily');
+      const data = await api.expenses.getReport("daily");
       if (data.message) {
         throw new Error(data.message);
       }
@@ -43,7 +43,10 @@ function DailyExpense() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 mb-16">
+    <div className="container mx-auto px-2 md:px-4 pb-8 pt-3 mb-16">
+      <p className="text-right text-blue-500 font-bold mr-1 mb-2">
+        Hey {user?.name?.split(" ")[0]} how are u doing today?
+      </p>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Daily Expenses</h1>
         <button
@@ -66,11 +69,13 @@ function DailyExpense() {
           <p className="text-lg mb-2">Total: ₹{report.total}</p>
           <h3 className="font-bold mb-2">Category Summary:</h3>
           <ul className="list-disc pl-5 mb-4">
-            {Object.entries(report.categorySummary).map(([category, amount]) => (
-              <li key={category}>
-                {category}: ₹{amount}
-              </li>
-            ))}
+            {Object.entries(report.categorySummary).map(
+              ([category, amount]) => (
+                <li key={category}>
+                  {category}: ₹{amount}
+                </li>
+              )
+            )}
           </ul>
         </div>
       )}
@@ -79,16 +84,16 @@ function DailyExpense() {
         <table className="min-w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Time
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Category
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Sub Category
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Amount
               </th>
             </tr>
@@ -96,16 +101,16 @@ function DailyExpense() {
           <tbody className="bg-white divide-y divide-gray-200">
             {expenses.map((expense) => (
               <tr key={expense._id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {format(new Date(expense.date), 'HH:mm')}
+                <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  {format(new Date(expense.date), "HH:mm a")}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {expense.category}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {expense.subCategory}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-3 md:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   ₹{expense.amount}
                 </td>
               </tr>

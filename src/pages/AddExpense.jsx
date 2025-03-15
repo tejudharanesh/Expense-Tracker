@@ -5,8 +5,8 @@ import { api } from "../services/api";
 const CATEGORIES = [
   "Food",
   "Entertainment",
-  "Cigarette",
   "Fuel",
+  "Sports",
   "Travel",
   "EMI",
   "Savings",
@@ -18,9 +18,9 @@ const CATEGORIES = [
 // Subcategories mapped to categories
 const SUBCATEGORIES = {
   Food: ["Breakfast", "Lunch", "Dinner", "Party", "Snacks"],
-  Entertainment: ["Movies", "Games", "Concerts", "Events"],
-  Cigarette: ["Regular", "Premium", "Other"],
+  Entertainment: ["Movies", "Games", "Concerts", "Events", "OTT"],
   Fuel: ["Petrol", "Diesel", "CNG"],
+  Sports: ["Gym", "Fitness", "Sports Equipment", "Sports Events"],
   Travel: ["Flight", "Train", "Bus", "Cab", "Hotel"],
   EMI: ["Home Loan", "Car Loan", "Education Loan", "Other"],
   Savings: ["Fixed Deposit", "Mutual Funds", "Stocks", "Other"],
@@ -29,7 +29,7 @@ const SUBCATEGORIES = {
   Others: ["Miscellaneous"],
 };
 
-function AddExpense() {
+function AddExpense({ user }) {
   const [formData, setFormData] = useState({
     category: "",
     subCategory: "",
@@ -93,10 +93,22 @@ function AddExpense() {
     }
   };
 
-  return (
-    <div className="container mx-auto px-4 py-8 mb-16">
-      <h1 className="text-2xl font-bold mb-6">Add New Expense</h1>
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
+  return (
+    <div className="container mx-auto px-4 pb-8 pt-3 mb-16">
+      <p className="text-right text-blue-500 font-bold mr-1">
+        Hey {user?.name?.split(" ")[0]}!
+      </p>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Add New Expense</h1>
+        <h2 className="font-bold mr-1">{formattedDate}</h2>
+      </div>
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
@@ -116,14 +128,14 @@ function AddExpense() {
         {/* Category Dropdown */}
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-800 font-bold mb-1 ml-1"
             htmlFor="category"
           >
             Category
           </label>
           <select
             id="category"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
             value={formData.category}
             onChange={handleCategoryChange}
             required
@@ -140,14 +152,14 @@ function AddExpense() {
         {/* Subcategory Dropdown (Only Show if Category is Selected) */}
         <div className="mb-4">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-800 font-bold mb-1 ml-1"
             htmlFor="subCategory"
           >
             Sub Category
           </label>
           <select
             id="subCategory"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer"
             value={formData.subCategory}
             onChange={(e) =>
               setFormData({ ...formData, subCategory: e.target.value })
@@ -166,7 +178,7 @@ function AddExpense() {
         {/* Amount Input */}
         <div className="mb-6">
           <label
-            className="block text-gray-700 text-sm font-bold mb-2"
+            className="block text-gray-800 font-bold mb-1 ml-1"
             htmlFor="amount"
           >
             Amount (₹)
@@ -174,13 +186,17 @@ function AddExpense() {
           <input
             type="number"
             id="amount"
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="appearance-none border border-gray-400 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             placeholder="Enter amount"
             value={formData.amount}
             onChange={(e) =>
-              setFormData({ ...formData, amount: e.target.value })
+              setFormData({
+                ...formData,
+                amount: e.target.value < 0 ? 0 : e.target.value,
+              })
             }
             required
+            min="0"
           />
         </div>
 

@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider, useAuth } from "./contexts/AuthContext"; // Import useAuth hook
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import Login from "./pages/Login";
 import AddExpense from "./pages/AddExpense";
 import DailyExpense from "./pages/DailyExpense";
@@ -15,7 +15,7 @@ import BottomNavbar from "./components/BottomNavbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function AppContent() {
-  const { user } = useAuth(); // Get the authenticated user
+  const { user } = useAuth();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -24,10 +24,10 @@ function AppContent() {
         <Route path="/" element={<Navigate to="/add-expense" replace />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/add-expense" element={<AddExpense />} />
-          <Route path="/daily" element={<DailyExpense />} />
-          <Route path="/weekly" element={<WeeklyExpense />} />
-          <Route path="/monthly" element={<MonthlyExpense />} />
+          <Route path="/add-expense" element={<AddExpense user={user} />} />
+          <Route path="/daily" element={<DailyExpense user={user} />} />
+          <Route path="/weekly" element={<WeeklyExpense user={user} />} />
+          <Route path="/monthly" element={<MonthlyExpense user={user} />} />
         </Route>
       </Routes>
 
