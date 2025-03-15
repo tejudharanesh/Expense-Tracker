@@ -31,21 +31,35 @@ window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  setTimeout(() => {
-    showInstallPrompt();
-  }, 10000);
-});
+  console.log("BeforeInstallPrompt event fired");
 
-function showInstallPrompt() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the A2HS prompt");
-      } else {
-        console.log("User dismissed the A2HS prompt");
-      }
-      deferredPrompt = null;
-    });
-  }
-}
+  // Create an Install button dynamically
+  const installButton = document.createElement("button");
+  installButton.innerText = "Install Expense Tracker";
+  installButton.style.position = "fixed";
+  installButton.style.bottom = "20px";
+  installButton.style.right = "20px";
+  installButton.style.padding = "10px";
+  installButton.style.backgroundColor = "blue";
+  installButton.style.color = "white";
+  installButton.style.border = "none";
+  installButton.style.borderRadius = "5px";
+  installButton.style.cursor = "pointer";
+
+  installButton.addEventListener("click", () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === "accepted") {
+          console.log("User accepted the install prompt");
+        } else {
+          console.log("User dismissed the install prompt");
+        }
+        deferredPrompt = null;
+        installButton.remove();
+      });
+    }
+  });
+
+  document.body.appendChild(installButton);
+});
